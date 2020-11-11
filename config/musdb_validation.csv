@@ -1,0 +1,3 @@
+mix_path,vocals_path,drums_path,bass_path,other_path,duration
+train/A Classic Education - NightOwl/mixture.wav,train/A Classic Education - NightOwl/vocals.wav,train/A Classic Education - NightOwl/drums.wav,train/A Classic Education - NightOwl/bass.wav,train/A Classic Education - NightOwl/other.wav,171.247166
+train/Actions - Devil's Words/mixture.wav,train/Actions - Devil's Words/vocals.wav,train/Actions - Devil's Words/drums.wav,train/Actions - Devil's Words/bass.wav,train/Actions - Devil's Words/other.wav,196.626576
