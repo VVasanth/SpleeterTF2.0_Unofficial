@@ -125,7 +125,7 @@ def get_default_audio_adapter():
     :returns: An audio adapter instance.
     """
     if AudioAdapter.DEFAULT is None:
-        from .ffmpeg import FFMPEGProcessAudioAdapter
+        from .ffmpeg_spl import FFMPEGProcessAudioAdapter
         AudioAdapter.DEFAULT = FFMPEGProcessAudioAdapter()
     return AudioAdapter.DEFAULT
 
