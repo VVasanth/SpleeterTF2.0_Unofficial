@@ -382,6 +382,7 @@ class DatasetBuilder(object):
         """
         dataset = dataset_from_csv(csv_path)
         dataset = self.compute_segments(dataset, n_chunks_per_song)
+
         # Shuffle data
         if shuffle:
             dataset = dataset.shuffle(
@@ -389,6 +390,7 @@ class DatasetBuilder(object):
                 seed=self._random_seed,
                 # useless since it is cached :
                 reshuffle_each_iteration=True)
+
         # Expand audio path.
         dataset = dataset.map(self.expand_path)
         # Load waveform, compute spectrogram, and filtering error,
@@ -403,13 +405,14 @@ class DatasetBuilder(object):
                 .map(instrument.filter_frequencies))
         dataset = dataset.map(self.filter_waveform)
 
-
         # Convert to uint before caching in order to save space.
         if convert_to_uint:
             for instrument in self.instruments:
                 dataset = dataset.map(instrument.convert_to_uint)
 
+
         dataset = self.cache(dataset, cache_directory, wait_for_cache)
+
         # Check for INFINITY (should not happen)
         for instrument in self.instruments:
             dataset = dataset.filter(instrument.filter_infinity)
@@ -418,12 +421,15 @@ class DatasetBuilder(object):
         # Repeat indefinitly
         if infinite_generator:
             dataset = dataset.repeat(count=-1)
+
         # Ensure same size for vocals and mix spectrograms.
         # NOTE: could be done before caching ?
         dataset = dataset.map(self.harmonize_spectrogram)
+
         # Filter out too short segment.
         # NOTE: could be done before caching ?
         dataset = dataset.filter(self.filter_short_segments)
+
         # Random time crop of 11.88s
         if random_time_crop:
             dataset = dataset.map(self.random_time_crop, num_parallel_calls=N)
@@ -458,6 +464,7 @@ class DatasetBuilder(object):
                 .map(instrument.reshape_spectrogram))
         # Select features and annotation.
         dataset = dataset.map(self.map_features)
+
         # Make batch (done after selection to avoid
         # error due to unprocessed instrument spectrogram batching).
         dataset = dataset.batch(batch_size)

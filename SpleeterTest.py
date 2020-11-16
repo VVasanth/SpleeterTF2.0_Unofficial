@@ -109,6 +109,11 @@ def maskOutput(output_dict, stft_val):
         instrument_mask = instrument_mask[
                           :tf.shape(stft_val)[0], ...]
         out[f'{instrument}_spectrogram'] = instrument_mask
+
+    for instrument, mask in out.items():
+        out[instrument] = tf.cast(mask, dtype=tf.complex64) * stft_val  # --> updating code locally
+        #out[instrument] = tf.cast(mask, dtype=tf.complex64)
+
     return out
 
 
@@ -197,6 +202,8 @@ def separate(waveform, audio_descriptor):
     predict_model = tf.saved_model.load(export_dir)
     inference_func = predict_model.signatures["serving_default"]
     preds = inference_func(spectrogram)
+    preds1 = {}
+    preds1['vocals_spectrogram_spectrogram'] = spectrogram
     output_dict = maskOutput(preds, stft_val)
 
     out = {}

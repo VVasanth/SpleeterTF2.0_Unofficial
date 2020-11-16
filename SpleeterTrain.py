@@ -61,10 +61,10 @@ def get_validation_dataset(audio_params, audio_adapter, audio_path):
         audio_params,
         audio_adapter,
         audio_path,
-        chunk_duration=12.0)
+        chunk_duration=20.0)
     return builder.build(
         audio_params.get('validation_csv'),
-        batch_size=audio_params.get('batch_size'),
+        batch_size=1000,
         cache_directory=audio_params.get('validation_cache'),
         convert_to_uint=True,
         infinite_generator=False,
@@ -106,7 +106,7 @@ def _create_estimator(params):
     return model
 
 
-audio_path = '/Users/vishrud/Desktop/Vasanth/Technology/Mobile-ML/Spleeter_TF2.0/musdb_dataset/sample'
+audio_path = '/Users/vishrud/Desktop/Vasanth/Technology/Mobile-ML/Spleeter_TF2.0/musdb_dataset/'
 config_path = "config/musdb_config.json"
 params = load_configuration(config_path)
 audio_adapter = get_audio_adapter(None)
@@ -128,6 +128,23 @@ for instrument in _instruments:
     model_dict[instrument] = getUnetModel(instrument)
     model_trainable_variables[instrument] = model_dict[instrument].trainable_variables
 
+def measureValAccuracy(test_features, test_label):
+
+    test_preds = {}
+
+    for instrument in _instruments:
+        test_preds[instrument] = model_dict[instrument].predict(test_features)
+
+    test_losses = {
+        name: tf.reduce_mean(tf.abs(output - test_label[name]))
+        for name, output in test_preds.items()
+    }
+    test_loss = tf.reduce_sum(list(test_losses.values()))
+    print("[INFO] test loss: {:.4f}".format(test_loss))
+    #metrics = {k: tf.keras.metrics.Mean(v) for k, v in test_losses.items()}
+    #metrics['absolute_difference'] = tf.compat.v1.metrics.mean(test_loss)
+    return test_loss
+
 
 def stepFn(inputFeatures, inputLabel):
 
@@ -146,20 +163,41 @@ def stepFn(inputFeatures, inputLabel):
         grads = tape.gradient(loss, model_trainable_variables[instrument])
         opt.apply_gradients(zip(grads, model_trainable_variables[instrument]))
 
+def saveIntermediateModel(save_dir, run_num):
+    for instrument in _instruments:
+        model_dict[instrument].save(save_dir + '/' + run_num + '/' + instrument + '/')
+
+test_ds = get_validation_dataset(params, audio_adapter, audio_path)
 input_ds = get_training_dataset(params, audio_adapter, audio_path )
 
-for run in range(0,1000):
+val_loss_results = []
+val_metrics_results = []
+
+export_dir = './spleeter_saved_model_dir/'
+
+for run in range(0,25):
     sys.stdout.flush()
-    epochStart = time.time()
-    print("Run number is" + str(run))
+    runStart = time.time()
+    print("[INFO] Run Step number is " + str(run))
     elem = next(iter(input_ds))
     input_features = elem[0]
     input_label = elem[1]
     stepFn(input_features, input_label)
+    runEnd = time.time()
+    elapsed = (runEnd - runStart)/ 60.0
+    print("took {:.4} minutes".format(elapsed))
 
-export_dir = './spleeter_saved_model_dir/'
+    if not (run%5 == 0):
+        test_elem = next(iter(test_ds))
+        test_features = test_elem[0]
+        test_label = test_elem[1]
+        val_loss = measureValAccuracy(test_features, test_label)
+        val_loss_results.append(val_loss)
+        #val_metrics_results.append(val_metrics)
 
-for instrument in _instruments:
-    model_dict[instrument].save(export_dir + '/' + instrument + '/')
+    if not (run%25 == 0):
+        saveIntermediateModel(export_dir, run)
+
+
 
 print("model training completed")
