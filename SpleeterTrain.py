@@ -165,7 +165,7 @@ def stepFn(inputFeatures, inputLabel):
 
 def saveIntermediateModel(save_dir, run_num):
     for instrument in _instruments:
-        model_dict[instrument].save(save_dir + '/' + run_num + '/' + instrument + '/')
+        model_dict[instrument].save(save_dir + '/' + str(run_num) + '/' + instrument + '/')
 
 test_ds = get_validation_dataset(params, audio_adapter, audio_path)
 input_ds = get_training_dataset(params, audio_adapter, audio_path )
@@ -175,7 +175,7 @@ val_metrics_results = []
 
 export_dir = './spleeter_saved_model_dir/'
 
-for run in range(0,25):
+for run in range(1,26):
     sys.stdout.flush()
     runStart = time.time()
     print("[INFO] Run Step number is " + str(run))
@@ -187,7 +187,7 @@ for run in range(0,25):
     elapsed = (runEnd - runStart)/ 60.0
     print("took {:.4} minutes".format(elapsed))
 
-    if not (run%5 == 0):
+    if (run%5 == 0):
         test_elem = next(iter(test_ds))
         test_features = test_elem[0]
         test_label = test_elem[1]
@@ -195,9 +195,7 @@ for run in range(0,25):
         val_loss_results.append(val_loss)
         #val_metrics_results.append(val_metrics)
 
-    if not (run%25 == 0):
+    if (run%25 == 0):
         saveIntermediateModel(export_dir, run)
-
-
 
 print("model training completed")
