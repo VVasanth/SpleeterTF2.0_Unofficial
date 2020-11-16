@@ -64,7 +64,7 @@ def get_validation_dataset(audio_params, audio_adapter, audio_path):
         chunk_duration=20.0)
     return builder.build(
         audio_params.get('validation_csv'),
-        batch_size=1000,
+        batch_size=100,
         cache_directory=audio_params.get('validation_cache'),
         convert_to_uint=True,
         infinite_generator=False,
