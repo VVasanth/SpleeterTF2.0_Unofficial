@@ -411,7 +411,7 @@ class DatasetBuilder(object):
                 dataset = dataset.map(instrument.convert_to_uint)
 
 
-        dataset = self.cache(dataset, cache_directory, wait_for_cache)
+        #dataset = self.cache(dataset, cache_directory, wait_for_cache)
 
         # Check for INFINITY (should not happen)
         for instrument in self.instruments:
