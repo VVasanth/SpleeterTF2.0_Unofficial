@@ -106,8 +106,8 @@ def _create_estimator(params):
     return model
 
 
-audio_path = 'musdb_dataset/'
-config_path = "config/musdb_config.json"
+audio_path = './musdb_dataset/'
+config_path = "./config/musdb_config.json"
 params = load_configuration(config_path)
 audio_adapter = get_audio_adapter(None)
 
