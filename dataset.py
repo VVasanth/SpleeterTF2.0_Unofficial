@@ -381,6 +381,10 @@ class DatasetBuilder(object):
         TO BE DOCUMENTED.
         """
         dataset = dataset_from_csv(csv_path)
+
+        for elem in dataset.take(2):
+            print(elem)
+
         dataset = self.compute_segments(dataset, n_chunks_per_song)
 
         # Shuffle data
