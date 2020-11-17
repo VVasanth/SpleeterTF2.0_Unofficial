@@ -382,9 +382,6 @@ class DatasetBuilder(object):
         """
         dataset = dataset_from_csv(csv_path)
 
-        for elem in dataset.take(2):
-            print(elem)
-
         dataset = self.compute_segments(dataset, n_chunks_per_song)
 
         # Shuffle data
@@ -409,16 +406,13 @@ class DatasetBuilder(object):
                 .map(instrument.filter_frequencies))
         dataset = dataset.map(self.filter_waveform)
 
-        for elem in dataset.take(2):
-            print(elem)
-
         # Convert to uint before caching in order to save space.
         if convert_to_uint:
             for instrument in self.instruments:
                 dataset = dataset.map(instrument.convert_to_uint)
 
 
-        #dataset = self.cache(dataset, cache_directory, wait_for_cache)
+        dataset = self.cache(dataset, cache_directory, wait_for_cache)
 
         # Check for INFINITY (should not happen)
         for instrument in self.instruments:
