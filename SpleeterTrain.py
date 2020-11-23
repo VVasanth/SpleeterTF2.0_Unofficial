@@ -10,7 +10,20 @@ from model.KerasUnet import getUnetModel
 from utils.configuration import load_configuration
 import tensorflow as tf
 
-from functools import partial
+
+audio_path = './musdb_dataset/sample'
+config_path = "./config/musdb_config.json"
+INIT_LR = 1e-3
+opt = AdamOptimizer(INIT_LR)
+_instruments = ['vocals_spectrogram', 'bass_spectrogram', 'drums_spectrogram', 'other_spectrogram']
+model_dict = {}
+model_trainable_variables = {}
+
+val_loss_results = []
+val_metrics_results = []
+
+export_dir = './spleeter_saved_model_dir/'
+
 
 def get_training_dataset(audio_params, audio_adapter, audio_path):
     """ Builds training dataset.
@@ -34,19 +47,6 @@ def get_training_dataset(audio_params, audio_adapter, audio_path):
         random_data_augmentation=False,
         convert_to_uint=True,
         wait_for_cache=False)
-
-def _create_train_spec(params, audio_adapter, audio_path):
-    """ Creates train spec.
-
-    :param params: TF params to build spec from.
-    :returns: Built train spec.
-    """
-    input_fn = partial(get_training_dataset, params, audio_adapter, audio_path)
-    train_spec = tf.estimator.TrainSpec(
-        input_fn=input_fn,
-        max_steps=params['train_max_steps'])
-    return train_spec
-
 
 
 def get_validation_dataset(audio_params, audio_adapter, audio_path):
@@ -75,54 +75,9 @@ def get_validation_dataset(audio_params, audio_adapter, audio_path):
         shuffle=False,
     )
 
-
-def _create_evaluation_spec(params, audio_adapter, audio_path):
-    """ Setup eval spec evaluating ever n seconds
-
-    :param params: TF params to build spec from.
-    :returns: Built evaluation spec.
-    """
-    input_fn = partial(
-        get_validation_dataset,
-        params,
-        audio_adapter,
-        audio_path)
-    evaluation_spec = tf.estimator.EvalSpec(
-        input_fn=input_fn,
-        steps=None,
-        throttle_secs=params['throttle_secs'])
-    return evaluation_spec
-
-def _create_estimator(params):
-    """ Creates estimator.
-
-    :param params: TF params to build estimator from.
-    :returns: Built estimator.
-    """
-    session_config = tf.compat.v1.ConfigProto()
-    session_config.gpu_options.per_process_gpu_memory_fraction = 0.45
-    model = getUnetModel()
-
-    return model
-
-
-audio_path = './musdb_dataset/'
-config_path = "./config/musdb_config.json"
 params = load_configuration(config_path)
 audio_adapter = get_audio_adapter(None)
 
-train_spec = _create_train_spec(params, audio_adapter, audio_path)
-evaluation_spec = _create_evaluation_spec(
-    params,
-    audio_adapter,
-    audio_path)
-
-INIT_LR = 1e-3
-EPOCHS = 1
-opt = AdamOptimizer(INIT_LR)
-_instruments = ['vocals_spectrogram', 'bass_spectrogram', 'drums_spectrogram', 'other_spectrogram']
-model_dict = {}
-model_trainable_variables = {}
 
 for instrument in _instruments:
     model_dict[instrument] = getUnetModel(instrument)
@@ -170,10 +125,6 @@ def saveIntermediateModel(save_dir, run_num):
 test_ds = get_validation_dataset(params, audio_adapter, audio_path)
 input_ds = get_training_dataset(params, audio_adapter, audio_path )
 
-val_loss_results = []
-val_metrics_results = []
-
-export_dir = './spleeter_saved_model_dir/'
 
 for run in range(1,26):
     sys.stdout.flush()

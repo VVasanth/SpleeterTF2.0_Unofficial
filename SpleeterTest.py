@@ -14,7 +14,7 @@ from multiprocessing import Pool
 
 multiprocess=True
 audio_adapter = get_audio_adapter(None)
-audio_descriptor = '/Users/vishrud/Desktop/Vasanth/Technology/Mobile-ML/Spleeter_TF2.0/input/BlackWidow.flac'
+audio_descriptor = '/Users/vishrud/Desktop/Vasanth/Technology/Mobile-ML/Spleeter_TF2.0/input/AClassicEducation.wav'
 sample_rate = 44100
 _instruments = ['vocals_spectrogram']
 _pool = Pool() if multiprocess else None
@@ -50,7 +50,7 @@ def _stft(data, inverse=False, length=None):
     return np.concatenate(out, axis=2 - inverse)
 
 
-export_dir = './spleeter_saved_model_dir/vocals_spectrogram'
+export_dir = './spleeter_saved_model_dir/2000/vocals_spectrogram'
 EPSILON = 1e-10
 _frame_length = 4096
 _F = 1024
@@ -202,8 +202,8 @@ def separate(waveform, audio_descriptor):
     predict_model = tf.saved_model.load(export_dir)
     inference_func = predict_model.signatures["serving_default"]
     preds = inference_func(spectrogram)
-    preds1 = {}
-    preds1['vocals_spectrogram_spectrogram'] = spectrogram
+    #preds1 = {}
+    #preds1['vocals_spectrogram_spectrogram'] = spectrogram
     output_dict = maskOutput(preds, stft_val)
 
     out = {}
