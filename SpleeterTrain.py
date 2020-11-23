@@ -11,7 +11,7 @@ from utils.configuration import load_configuration
 import tensorflow as tf
 
 
-audio_path = '/floyd/input/musdbdataset'
+audio_path = './musdb_dataset/sample/'
 config_path = "./config/musdb_config.json"
 INIT_LR = 1e-3
 opt = AdamOptimizer(INIT_LR)

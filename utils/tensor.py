@@ -154,7 +154,7 @@ def dataset_from_csv(csv_path, **kwargs):
     :returns: Loaded dataset.
     """
     df = pd.read_csv(csv_path, **kwargs)
-    print(df.head)
+
     dataset = (
         tf.data.Dataset.from_tensor_slices(
             {key: df[key].values for key in df})

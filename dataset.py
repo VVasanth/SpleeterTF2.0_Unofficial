@@ -406,9 +406,6 @@ class DatasetBuilder(object):
                 .map(instrument.filter_frequencies))
         dataset = dataset.map(self.filter_waveform)
 
-        for elem in dataset.take(2):
-            print(elem)
-
         # Convert to uint before caching in order to save space.
         if convert_to_uint:
             for instrument in self.instruments:
