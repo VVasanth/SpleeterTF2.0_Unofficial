@@ -14,13 +14,18 @@ from multiprocessing import Pool
 
 multiprocess=True
 audio_adapter = get_audio_adapter(None)
-audio_descriptor = '/Users/vishrud/Desktop/Vasanth/Technology/Mobile-ML/Spleeter_TF2.0/input/AClassicEducation.wav'
+audio_descriptor = '/Users/vishrud/Desktop/Vasanth/Technology/Mobile-ML/Spleeter_TF2.0/input/Actions_DevilsWords.wav'
 sample_rate = 44100
-_instruments = ['vocals_spectrogram']
+_instruments = ['vocals_spectrogram', 'other_spectrogram']
 _pool = Pool() if multiprocess else None
 _tasks = []
 destination = '/Users/vishrud/Desktop/Vasanth/Technology/Mobile-ML/Spleeter_TF2.0/output/'
 _sample_rate = 44100
+
+export_dir = './spleeter_saved_model_dir/2000_2511/'
+EPSILON = 1e-10
+_frame_length = 4096
+_F = 1024
 
 def _stft(data, inverse=False, length=None):
     """
@@ -50,10 +55,7 @@ def _stft(data, inverse=False, length=None):
     return np.concatenate(out, axis=2 - inverse)
 
 
-export_dir = './spleeter_saved_model_dir/2000/vocals_spectrogram'
-EPSILON = 1e-10
-_frame_length = 4096
-_F = 1024
+
 
 def _extend_mask( mask):
     """ Extend mask, from reduced number of frequency bin to the number of
@@ -112,6 +114,8 @@ def maskOutput(output_dict, stft_val):
 
     for instrument, mask in out.items():
         out[instrument] = tf.cast(mask, dtype=tf.complex64) * stft_val  # --> updating code locally
+        print(instrument)
+        print(tf.reduce_sum(out[instrument]))
         #out[instrument] = tf.cast(mask, dtype=tf.complex64)
 
     return out
@@ -199,12 +203,24 @@ def separate(waveform, audio_descriptor):
     #self._features[spec_name] = tf.abs(
      #   pad_and_partition(self._features[stft_name], self._T))[:, :, :self._F, :]
 
-    predict_model = tf.saved_model.load(export_dir)
-    inference_func = predict_model.signatures["serving_default"]
-    preds = inference_func(spectrogram)
+    preds = {}
+
+    for instrument in _instruments:
+        predict_model = tf.saved_model.load(export_dir + instrument)
+        inference_func = predict_model.signatures["serving_default"]
+        predictions = inference_func(spectrogram)
+        preds[f'{instrument}_spectrogram'] = predictions[f'{instrument}_spectrogram']
+
+
     #preds1 = {}
     #preds1['vocals_spectrogram_spectrogram'] = spectrogram
+    input_RedSum = tf.reduce_sum(spectrogram)
+    outputRedSum = tf.reduce_sum(preds['vocals_spectrogram_spectrogram'])
     output_dict = maskOutput(preds, stft_val)
+    #output_dict_1 = maskOutput(preds1, stft_val)
+
+    #input_RedSum1 = tf.reduce_sum(output_dict_1['vocals_spectrogram_spectrogram'])
+    output_RedSum1 = tf.reduce_sum(output_dict['vocals_spectrogram_spectrogram'])
 
     out = {}
     for instrument in _instruments:

@@ -11,7 +11,7 @@ from utils.configuration import load_configuration
 import tensorflow as tf
 
 
-audio_path = './musdb_dataset/sample/'
+audio_path = './musdb_dataset/'
 config_path = "./config/musdb_config.json"
 INIT_LR = 1e-3
 opt = AdamOptimizer(INIT_LR)
@@ -146,7 +146,7 @@ for run in range(1,26):
         val_loss_results.append(val_loss)
         #val_metrics_results.append(val_metrics)
 
-    if (run%25 == 0):
+    if (run%100 == 0):
         saveIntermediateModel(export_dir, run)
 
 print("model training completed")

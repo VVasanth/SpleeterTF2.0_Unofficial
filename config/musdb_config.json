@@ -10,7 +10,7 @@
     "T":512,
     "F":1024,
     "n_channels":2,
-    "n_chunks_per_song":1,
+    "n_chunks_per_song":4,
     "separation_exponent":2,
     "mask_extension":"zeros",
     "learning_rate": 1e-4,
