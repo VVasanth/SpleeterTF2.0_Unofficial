@@ -43,7 +43,7 @@ def get_training_dataset(audio_params, audio_adapter, audio_path):
         audio_params.get('train_csv'),
         cache_directory=audio_params.get('training_cache'),
         batch_size=audio_params.get('batch_size'),
-        n_chunks_per_song=audio_params.get('n_chunks_per_song', 2),
+        n_chunks_per_song=audio_params.get('n_chunks_per_song', 1),
         random_data_augmentation=False,
         convert_to_uint=True,
         wait_for_cache=False)
@@ -78,9 +78,7 @@ def get_validation_dataset(audio_params, audio_adapter, audio_path):
 params = load_configuration(config_path)
 audio_adapter = get_audio_adapter(None)
 
-
 for instrument in _instruments:
-    model_dict[instrument] = getUnetModel(instrument)
     model_trainable_variables[instrument] = model_dict[instrument].trainable_variables
 
 def measureValAccuracy(test_features, test_label):
@@ -121,9 +119,10 @@ def stepFn(inputFeatures, inputLabel):
 def saveIntermediateModel(save_dir, run_num):
     for instrument in _instruments:
         model_dict[instrument].save(save_dir + '/' + str(run_num) + '/' + instrument + '/')
+        model_dict[instrument].save_weights(save_dir+'/' + str(run_num) + '/' + instrument + '/' + 'checkpoint' + '/')
 
-test_ds = get_validation_dataset(params, audio_adapter, audio_path)
 input_ds = get_training_dataset(params, audio_adapter, audio_path )
+test_ds = get_validation_dataset(params, audio_adapter, audio_path)
 
 
 for run in range(1,26):
@@ -138,7 +137,7 @@ for run in range(1,26):
     elapsed = (runEnd - runStart)/ 60.0
     print("took {:.4} minutes".format(elapsed))
 
-    if (run%5 == 0):
+    if (run%50 == 0):
         test_elem = next(iter(test_ds))
         test_features = test_elem[0]
         test_label = test_elem[1]

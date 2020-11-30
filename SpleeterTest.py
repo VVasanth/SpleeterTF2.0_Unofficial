@@ -14,7 +14,7 @@ from multiprocessing import Pool
 
 multiprocess=True
 audio_adapter = get_audio_adapter(None)
-audio_descriptor = '/Users/vishrud/Desktop/Vasanth/Technology/Mobile-ML/Spleeter_TF2.0/input/Actions_DevilsWords.wav'
+audio_descriptor = '/Users/vishrud/Desktop/Vasanth/Technology/Mobile-ML/Spleeter_TF2.0/input/AClassicEducation.wav'
 sample_rate = 44100
 _instruments = ['vocals_spectrogram', 'other_spectrogram']
 _pool = Pool() if multiprocess else None
@@ -200,9 +200,6 @@ def separate(waveform, audio_descriptor):
 
     stft_tf = tf.convert_to_tensor(stft_val,np.float32)
 
-    #self._features[spec_name] = tf.abs(
-     #   pad_and_partition(self._features[stft_name], self._T))[:, :, :self._F, :]
-
     preds = {}
 
     for instrument in _instruments:
@@ -211,16 +208,7 @@ def separate(waveform, audio_descriptor):
         predictions = inference_func(spectrogram)
         preds[f'{instrument}_spectrogram'] = predictions[f'{instrument}_spectrogram']
 
-
-    #preds1 = {}
-    #preds1['vocals_spectrogram_spectrogram'] = spectrogram
-    input_RedSum = tf.reduce_sum(spectrogram)
-    outputRedSum = tf.reduce_sum(preds['vocals_spectrogram_spectrogram'])
     output_dict = maskOutput(preds, stft_val)
-    #output_dict_1 = maskOutput(preds1, stft_val)
-
-    #input_RedSum1 = tf.reduce_sum(output_dict_1['vocals_spectrogram_spectrogram'])
-    output_RedSum1 = tf.reduce_sum(output_dict['vocals_spectrogram_spectrogram'])
 
     out = {}
     for instrument in _instruments:
