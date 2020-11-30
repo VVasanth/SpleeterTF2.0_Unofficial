@@ -79,6 +79,7 @@ params = load_configuration(config_path)
 audio_adapter = get_audio_adapter(None)
 
 for instrument in _instruments:
+    model_dict[instrument] = getUnetModel(instrument)
     model_trainable_variables[instrument] = model_dict[instrument].trainable_variables
 
 def measureValAccuracy(test_features, test_label):
