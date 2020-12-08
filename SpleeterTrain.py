@@ -138,7 +138,7 @@ for run in range(1,26):
     elapsed = (runEnd - runStart)/ 60.0
     print("took {:.4} minutes".format(elapsed))
 
-    if (run%50 == 0):
+    if (run%5 == 0):
         test_elem = next(iter(test_ds))
         test_features = test_elem[0]
         test_label = test_elem[1]
