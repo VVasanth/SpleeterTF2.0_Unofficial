@@ -55,21 +55,21 @@ version. Unet architecture of the network available in 'model/KerasUnet.py' is e
 
 Let me summarize the process of ModelBuilding and the Unet architecture:
 
---> Spleeter primarily deals with audio separation process and the Unet architecture that is used here - primarily designed for Image Segmentation problems.
---> Here, we will be using the same network and train the network by inputing 'mixture.wav' against each of the stems.
---> We will identify loss function as a measure of sum of difference between each of the stems actual value and output value.
---> Optimizer's funciton is to reduce the summation of loss as part of the training process.
---> As we are required to consier the summation of each of the stem's loss and optimize it - keras based model building would not work here.
---> We need to write 'custom training logic' using tensorflow's gradient tape's feature.
---> SpleeterTrain.py contains the corresponding code and trains the network.
---> Losses of the network are measured every 5 runs and model is saved every 10 runs. These are configurable values and we can change them, as required.
---> While saving the model - we are saving both checkpoint and savedmodel version.
---> SavedModel version is to generate the TFLite model, whereas checkpoint is to restart the training post the completion of one run.
---> Models will be available in 'spleeter_saved_model_dir' at the end of the training.
---> RMSE is being used as a measure of loss
---> When running the training loop across ~2000 runs on a limited dataset - loss is around 3.0
---> As part of training operation - 4 model files will be generated, each corresponding to each of the stems.
---> 4 models will be required to be ported into TFLite version, for android app processing
+--> Spleeter primarily deals with audio separation process and the Unet architecture that is used here - primarily designed for Image Segmentation problems.  
+--> Here, we will be using the same network and train the network by inputing 'mixture.wav' against each of the stems.  
+--> We will identify loss function as a measure of sum of difference between each of the stems actual value and output value.  
+--> Optimizer's funciton is to reduce the summation of loss as part of the training process.  
+--> As we are required to consier the summation of each of the stem's loss and optimize it - keras based model building would not work here.  
+--> We need to write 'custom training logic' using tensorflow's gradient tape's feature.  
+--> SpleeterTrain.py contains the corresponding code and trains the network.  
+--> Losses of the network are measured every 5 runs and model is saved every 10 runs. These are configurable values and we can change them, as required.  
+--> While saving the model - we are saving both checkpoint and savedmodel version.  
+--> SavedModel version is to generate the TFLite model, whereas checkpoint is to restart the training post the completion of one run.  
+--> Models will be available in 'spleeter_saved_model_dir' at the end of the training.  
+--> RMSE is being used as a measure of loss  
+--> When running the training loop across ~2000 runs on a limited dataset - loss is around 3.0  
+--> As part of training operation - 4 model files will be generated, each corresponding to each of the stems.  
+--> 4 models will be required to be ported into TFLite version, for android app processing  
 
 **Test Operatino**
 
