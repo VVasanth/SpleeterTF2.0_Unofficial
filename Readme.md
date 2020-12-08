@@ -71,11 +71,13 @@ Let me summarize the process of ModelBuilding and the Unet architecture:
 --> As part of training operation - 4 model files will be generated, each corresponding to each of the stems.  
 --> 4 models will be required to be ported into TFLite version, for android app processing  
 
-**Test Operatino**
+**Test Operation**
 
 Test operation is about taking the built model and feeding it with the audio source. Output of the model would contain multiple files corresponding to the respective stems.
 
 Audio file needs to be processed for the stft values and to be fed into the model. Output of the model needs to be masked, such that it could be generated as the audio file.
+
+Place the input file that needs to be processed in 'input' folder and post execution, output will be generated under the 'output' folder.
 
 Output of model produces the distorted audio, which could be played in any player. 
 
