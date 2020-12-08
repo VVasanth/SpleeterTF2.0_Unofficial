@@ -11,15 +11,16 @@ import os
 from os.path import basename, join, splitext, dirname
 
 from multiprocessing import Pool
+import time
 
 multiprocess=True
 audio_adapter = get_audio_adapter(None)
-audio_descriptor = '/Users/vishrud/Desktop/Vasanth/Technology/Mobile-ML/Spleeter_TF2.0/input/AClassicEducation.wav'
+audio_descriptor = './input/AClassicEducation.wav'
 sample_rate = 44100
 _instruments = ['vocals_spectrogram', 'other_spectrogram']
 _pool = Pool() if multiprocess else None
 _tasks = []
-destination = '/Users/vishrud/Desktop/Vasanth/Technology/Mobile-ML/Spleeter_TF2.0/output/'
+destination = './output/'
 _sample_rate = 44100
 
 export_dir = './spleeter_saved_model_dir/2000_2511/'
@@ -185,6 +186,7 @@ def save_to_file(
             _tasks.append(task)
         else:
             audio_adapter.save(path, data, _sample_rate, codec, bitrate)
+            time.sleep(10)
     if synchronous and _pool:
         join_self()
 
@@ -221,7 +223,8 @@ def separate(waveform, audio_descriptor):
     save_to_file(out, audio_descriptor, destination,
                       filename_format, codec, audio_adapter,
                       bitrate, synchronous)
-
+    #run in debug mode here, by placing breakpoint in the next line
+    #async process of saving file need to be timed properly
     print(100)
 
 waveform, sample_rate = audio_adapter.load(

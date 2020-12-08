@@ -41,3 +41,47 @@ Input Data Set:
  2. 'musdb_train.csv' and 'musdb_validation.csv' are the files that are the config files from official Spleeter.
  3. 'musdb_train_small.csv' and 'musdb_validation_small.csv' are the files that contains smaller data - as I would be running the training in my CPU bound machine.    
 
+**Training Operation**
+
+Once you have extracted the input data from musdb dataset and configured the config files properly - you can start the training process from 'SpleeterTrain.py' file.
+
+SpleeterTrain.py file has two components, as below:
+
+--> Data processing: Data processing is primarily reads the input data from the csv files, loads the audio files and generates the stft values for the audio files. 
+It does series of filtering to remove the invalid data. Data processing is almost same as official Spleeter and the code has been migrated to TF2.0.
+
+--> Model Building: Official Spleeter generates the model as checkpoint files and generating TFLite model from this was difficult - thats the primary reason for building this 
+version. Unet architecture of the network available in 'model/KerasUnet.py' is exactly similar to Official spleeter. But the train operation is performed using Tensorflow GradientTape function.
+
+Let me summarize the process of ModelBuilding and the Unet architecture:
+
+--> Spleeter primarily deals with audio separation process and the Unet architecture that is used here - primarily designed for Image Segmentation problems.
+--> Here, we will be using the same network and train the network by inputing 'mixture.wav' against each of the stems.
+--> We will identify loss function as a measure of sum of difference between each of the stems actual value and output value.
+--> Optimizer's funciton is to reduce the summation of loss as part of the training process.
+--> As we are required to consier the summation of each of the stem's loss and optimize it - keras based model building would not work here.
+--> We need to write 'custom training logic' using tensorflow's gradient tape's feature.
+--> SpleeterTrain.py contains the corresponding code and trains the network.
+--> Losses of the network are measured every 5 runs and model is saved every 10 runs. These are configurable values and we can change them, as required.
+--> While saving the model - we are saving both checkpoint and savedmodel version.
+--> SavedModel version is to generate the TFLite model, whereas checkpoint is to restart the training post the completion of one run.
+--> Models will be available in 'spleeter_saved_model_dir' at the end of the training.
+--> RMSE is being used as a measure of loss
+--> When running the training loop across ~2000 runs on a limited dataset - loss is around 3.0
+--> As part of training operation - 4 model files will be generated, each corresponding to each of the stems.
+--> 4 models will be required to be ported into TFLite version, for android app processing
+
+**Test Operatino**
+
+Test operation is about taking the built model and feeding it with the audio source. Output of the model would contain multiple files corresponding to the respective stems.
+
+Audio file needs to be processed for the stft values and to be fed into the model. Output of the model needs to be masked, such that it could be generated as the audio file.
+
+Output of model produces the distorted audio, which could be played in any player. 
+
+**Accuracy Improvement Process**
+
+Accuracy improvement is the activity that will be taken up in the coming weeks. Intent is to reduce the RMSE error to lesser value there by model will be able to separate the audio stems.
+Till now, training operation has been performed on CPUs. GPU is required to train the model effectively across wide datasets across ~200K runs. 
+
+Contributors interested towards improving the accuracy can get in touch with me.

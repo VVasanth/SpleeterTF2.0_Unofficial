@@ -126,7 +126,7 @@ input_ds = get_training_dataset(params, audio_adapter, audio_path )
 test_ds = get_validation_dataset(params, audio_adapter, audio_path)
 
 
-for run in range(1,26):
+for run in range(1,11):
     sys.stdout.flush()
     runStart = time.time()
     print("[INFO] Run Step number is " + str(run))
@@ -146,7 +146,7 @@ for run in range(1,26):
         val_loss_results.append(val_loss)
         #val_metrics_results.append(val_metrics)
 
-    if (run%100 == 0):
+    if (run%10 == 0):
         saveIntermediateModel(export_dir, run)
 
 print("model training completed")
