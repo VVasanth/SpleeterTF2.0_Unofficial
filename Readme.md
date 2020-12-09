@@ -16,6 +16,17 @@ I would work towards training the solution on the complete dataset of musdb with
 
 **Environment Setup:**
 
+Conda Env Setup:
+
+1. Ensure you have anaconda installed on your machine.
+2. Create a new environment with the below command:  
+    conda create --name <envName> python=3.6
+3. Once the installation is done, activate the environment with below command:
+    conda activate <envName>
+4. Install the dependency packages with the below command:
+    pip install -r requirements.txt 
+
+
 Input Data Set:
 1. Input data set for this solution is musdb dataset.
 2. MusDB dataset is a protected dataset and the request for the access has to be placed in the below link:
