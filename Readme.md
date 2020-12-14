@@ -1,5 +1,7 @@
 This is an unofficial repository that contains the Spleeter from Deezer(https://github.com/deezer/spleeter/tree/master) migrated into TF2.0.
 
+If you would like to participate over Gitter chat - pls use this channel: https://gitter.im/audioSourceSeparationOnEdge/community
+
 Spleeter is an industry standard audio source separation library that exhibits amazing performance in splitting the audio files into various stems such as vocals, piano, drums, bass
 and accompainments. Spleeter has been created in TF1.0 and the models are available in checkpoint format.
 
