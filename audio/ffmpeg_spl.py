@@ -130,6 +130,9 @@ class FFMPEGProcessAudioAdapter(AudioAdapter):
         get_logger().debug('Writing file %s', path)
         input_kwargs = {'ar': sample_rate, 'ac': data.shape[1]}
         output_kwargs = {'ar': sample_rate, 'strict': '-2'}
+
+        print(data[0][0].astype('<f4').tobytes())
+
         if bitrate:
             output_kwargs['audio_bitrate'] = bitrate
         if codec is not None and codec != 'wav':

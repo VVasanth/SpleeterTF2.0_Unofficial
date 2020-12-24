@@ -9,7 +9,7 @@ from model import model_fn
 from model.KerasUnet import getUnetModel
 from utils.configuration import load_configuration
 import tensorflow as tf
-
+import csv
 
 audio_path = './musdb_dataset/'
 config_path = "./config/musdb_config.json"
@@ -23,7 +23,7 @@ val_loss_results = []
 val_metrics_results = []
 
 export_dir = './spleeter_saved_model_dir/'
-
+metrics_csv = './csv_metrics/metrics_loss.csv'
 
 def get_training_dataset(audio_params, audio_adapter, audio_path):
     """ Builds training dataset.
@@ -82,7 +82,7 @@ for instrument in _instruments:
     model_dict[instrument] = getUnetModel(instrument)
     model_trainable_variables[instrument] = model_dict[instrument].trainable_variables
 
-def measureValAccuracy(test_features, test_label):
+def measureValAccuracy(test_features, test_label, run_ind):
 
     test_preds = {}
 
@@ -94,11 +94,18 @@ def measureValAccuracy(test_features, test_label):
         for name, output in test_preds.items()
     }
     test_loss = tf.reduce_sum(list(test_losses.values()))
+    write_to_csv(test_loss, run_ind)
     print("[INFO] test loss: {:.4f}".format(test_loss))
     #metrics = {k: tf.keras.metrics.Mean(v) for k, v in test_losses.items()}
     #metrics['absolute_difference'] = tf.compat.v1.metrics.mean(test_loss)
     return test_loss
 
+
+
+def write_to_csv(test_loss, run_ind):
+    with open(metrics_csv, 'a') as outfile:
+        writer = csv.writer(outfile)
+        writer.writerow([run_ind, test_loss])
 
 def stepFn(inputFeatures, inputLabel):
 
@@ -142,7 +149,7 @@ for run in range(1,11):
         test_elem = next(iter(test_ds))
         test_features = test_elem[0]
         test_label = test_elem[1]
-        val_loss = measureValAccuracy(test_features, test_label)
+        val_loss = measureValAccuracy(test_features, test_label, run)
         val_loss_results.append(val_loss)
         #val_metrics_results.append(val_metrics)
 

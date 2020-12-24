@@ -63,7 +63,7 @@ def getUnetModel(instrument):
         padding='same',
         kernel_initializer=kernel_initializer)
 
-    input_layer = Input(shape=(512,1024,2), name='input_1')
+    input_layer = Input(shape=(512,1024,2), name='mix_spectrogram')
 
     # First layer.
     conv1 = conv2d_factory(conv_n_filters[0], (5, 5))(input_layer)
