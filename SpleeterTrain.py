@@ -133,27 +133,29 @@ input_ds = get_training_dataset(params, audio_adapter, audio_path )
 test_ds = get_validation_dataset(params, audio_adapter, audio_path)
 
 
-for run in range(1,11):
-    sys.stdout.flush()
-    runStart = time.time()
-    print("[INFO] Run Step number is " + str(run))
-    elem = next(iter(input_ds))
-    input_features = elem[0]
-    input_label = elem[1]
-    stepFn(input_features, input_label)
-    runEnd = time.time()
-    elapsed = (runEnd - runStart)/ 60.0
-    print("took {:.4} minutes".format(elapsed))
+def trainModel(maxRun):
 
-    if (run%5 == 0):
-        test_elem = next(iter(test_ds))
-        test_features = test_elem[0]
-        test_label = test_elem[1]
-        val_loss = measureValAccuracy(test_features, test_label, run)
-        val_loss_results.append(val_loss)
-        #val_metrics_results.append(val_metrics)
+    for run in range(1,maxRun):
+        sys.stdout.flush()
+        runStart = time.time()
+        print("[INFO] Run Step number is " + str(run))
+        elem = next(iter(input_ds))
+        input_features = elem[0]
+        input_label = elem[1]
+        stepFn(input_features, input_label)
+        runEnd = time.time()
+        elapsed = (runEnd - runStart)/ 60.0
+        print("took {:.4} minutes".format(elapsed))
 
-    if (run%10 == 0):
-        saveIntermediateModel(export_dir, run)
+        if (run%5 == 0):
+            test_elem = next(iter(test_ds))
+            test_features = test_elem[0]
+            test_label = test_elem[1]
+            val_loss = measureValAccuracy(test_features, test_label, run)
+            val_loss_results.append(val_loss)
+            #val_metrics_results.append(val_metrics)
 
-print("model training completed")
+        if (run%10 == 0):
+            saveIntermediateModel(export_dir, run)
+
+    print("model training completed")

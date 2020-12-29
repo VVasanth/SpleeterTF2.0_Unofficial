@@ -15,7 +15,7 @@ import time
 
 multiprocess=True
 audio_adapter = get_audio_adapter(None)
-audio_descriptor = './input/AClassicEducation.wav'
+audio_descriptor = './input/AnimalRockShow.wav'
 sample_rate = 44100
 _instruments = ['vocals_spectrogram', 'other_spectrogram']
 _pool = Pool() if multiprocess else None
@@ -23,7 +23,7 @@ _tasks = []
 destination = './output/'
 _sample_rate = 44100
 
-export_dir = './spleeter_saved_model_dir/2000_2511/'
+export_dir = './spleeter_saved_model_dir/5000_2912/'
 EPSILON = 1e-10
 _frame_length = 4096
 _F = 1024
