@@ -15,7 +15,7 @@ audio_path = './musdb_dataset/'
 config_path = "./config/musdb_config.json"
 INIT_LR = 1e-3
 opt = AdamOptimizer(INIT_LR)
-_instruments = ['vocals_spectrogram', 'bass_spectrogram', 'drums_spectrogram', 'other_spectrogram']
+_instruments = ['vocals_spectrogram']
 model_dict = {}
 model_trainable_variables = {}
 

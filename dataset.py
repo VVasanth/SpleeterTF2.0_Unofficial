@@ -397,6 +397,8 @@ class DatasetBuilder(object):
         # Load waveform, compute spectrogram, and filtering error,
         # K bins frequencies, and waveform.
         N = num_parallel_calls
+
+
         for instrument in self.instruments:
             dataset = (
                 dataset
