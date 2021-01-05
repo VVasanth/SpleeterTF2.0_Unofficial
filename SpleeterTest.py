@@ -16,7 +16,7 @@ import time
 multiprocess=True
 synchronous = True
 audio_adapter = get_audio_adapter(None)
-audio_descriptor = './input/AClassicEducation.wav'
+audio_descriptor = './input/AClassicEducationVocals.wav'
 sample_rate = 44100
 _instruments = ['vocals_spectrogram']
 _pool = Pool() if multiprocess else None

@@ -131,7 +131,7 @@ input_ds = get_training_dataset(params, audio_adapter, audio_path )
 test_ds = get_validation_dataset(params, audio_adapter, audio_path)
 
 
-def trainModel(maxRun):
+def trainModel(maxRun, saveModelEveryRun):
 
     for run in range(1,maxRun):
         sys.stdout.flush()
@@ -153,7 +153,7 @@ def trainModel(maxRun):
             val_loss_results.append(val_loss)
             #val_metrics_results.append(val_metrics)
 
-        if (run%10 == 0):
+        if (run%saveModelEveryRun == 0):
             saveIntermediateModel(export_dir, run)
 
     print("model training completed")
