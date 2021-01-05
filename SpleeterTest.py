@@ -209,7 +209,7 @@ def separate(waveform, audio_descriptor):
         predict_model = tf.saved_model.load(export_dir + instrument)
         inference_func = predict_model.signatures["serving_default"]
         predictions = inference_func(spectrogram)
-        preds[f'{instrument}_spectrogram'] = outputfromTF1 #predictions[f'{instrument}_spectrogram']
+        preds[f'{instrument}_spectrogram'] =  predictions[f'{instrument}_spectrogram']
 
     output_dict = maskOutput(preds, stft_val)
 
