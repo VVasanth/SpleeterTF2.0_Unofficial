@@ -14,6 +14,7 @@ from multiprocessing import Pool
 import time
 
 multiprocess=True
+synchronous = True
 audio_adapter = get_audio_adapter(None)
 audio_descriptor = './input/AClassicEducation.wav'
 sample_rate = 44100
@@ -88,7 +89,7 @@ def _extend_mask( mask):
 
 
 def maskOutput(output_dict, stft_val):
-    separation_exponent = 1
+    separation_exponent = 2
     output_sum = tf.reduce_sum(
         [e ** separation_exponent for e in output_dict.values()],
         axis=0
@@ -209,7 +210,7 @@ def separate(waveform, audio_descriptor):
         predict_model = tf.saved_model.load(export_dir + instrument)
         inference_func = predict_model.signatures["serving_default"]
         predictions = inference_func(spectrogram)
-        preds[f'{instrument}_spectrogram'] =  predictions[f'{instrument}_spectrogram']
+        preds[f'{instrument}_spectrogram'] = predictions[f'{instrument}_spectrogram']
 
     output_dict = maskOutput(preds, stft_val)
 
@@ -220,12 +221,11 @@ def separate(waveform, audio_descriptor):
     filename_format = '{filename}/{instrument}.{codec}'
     codec = 'wav'
     bitrate = '128k'
-    synchronous = False
+
     save_to_file(out, audio_descriptor, destination,
                       filename_format, codec, audio_adapter,
                       bitrate, synchronous)
-    #run in debug mode here, by placing breakpoint in the next line
-    #async process of saving file need to be timed properly
+
     print(100)
 
 waveform, sample_rate = audio_adapter.load(
