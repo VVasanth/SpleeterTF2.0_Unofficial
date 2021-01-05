@@ -17,13 +17,13 @@ multiprocess=True
 audio_adapter = get_audio_adapter(None)
 audio_descriptor = './input/AClassicEducation.wav'
 sample_rate = 44100
-_instruments = ['vocals_spectrogram', 'other_spectrogram']
+_instruments = ['vocals_spectrogram']
 _pool = Pool() if multiprocess else None
 _tasks = []
 destination = './output/'
 _sample_rate = 44100
 
-export_dir = './spleeter_saved_model_dir/1000_2912/'
+export_dir = './spleeter_saved_model_dir/5000_3112/'
 EPSILON = 1e-10
 _frame_length = 4096
 _F = 1024
@@ -88,7 +88,7 @@ def _extend_mask( mask):
 
 
 def maskOutput(output_dict, stft_val):
-    separation_exponent = 2
+    separation_exponent = 1
     output_sum = tf.reduce_sum(
         [e ** separation_exponent for e in output_dict.values()],
         axis=0
@@ -98,7 +98,7 @@ def maskOutput(output_dict, stft_val):
         output = output_dict[f'{instrument}_spectrogram']
         # Compute mask with the model.
         instrument_mask = (output ** separation_exponent
-                           + (EPSILON / len(output_dict))) / output_sum
+                           + (EPSILON / len(output_dict)))
         # Extend mask;
         instrument_mask = _extend_mask(instrument_mask)
         # Stack back mask.
@@ -193,6 +193,7 @@ def save_to_file(
 
 def separate(waveform, audio_descriptor):
     stft_val = _stft(waveform)
+
     if stft_val.shape[-1] == 1:
         stft_val = np.concatenate([stft_val, stft_val], axis=-1)
     elif stft_val.shape[-1] > 2:
@@ -200,15 +201,15 @@ def separate(waveform, audio_descriptor):
 
     spectrogram = tf.abs(pad_and_partition(stft_val, 512))[:,:,:1024,:]
 
-    stft_tf = tf.convert_to_tensor(stft_val,np.float32)
-
     preds = {}
+
+    outputfromTF1 = np.load('./input/AClassicEducationVocal.npy', allow_pickle=True)
 
     for instrument in _instruments:
         predict_model = tf.saved_model.load(export_dir + instrument)
         inference_func = predict_model.signatures["serving_default"]
         predictions = inference_func(spectrogram)
-        preds[f'{instrument}_spectrogram'] = predictions[f'{instrument}_spectrogram']
+        preds[f'{instrument}_spectrogram'] = outputfromTF1 #predictions[f'{instrument}_spectrogram']
 
     output_dict = maskOutput(preds, stft_val)
 
@@ -230,7 +231,7 @@ def separate(waveform, audio_descriptor):
 waveform, sample_rate = audio_adapter.load(
             audio_descriptor,
             offset=0,
-            duration=60,
+            duration=600,
             sample_rate=44100)
 
 sources = separate(waveform, audio_descriptor)

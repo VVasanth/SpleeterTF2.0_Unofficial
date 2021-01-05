@@ -96,8 +96,6 @@ def measureValAccuracy(test_features, test_label, run_ind):
     test_loss = tf.reduce_sum(list(test_losses.values()))
     write_to_csv(test_loss, run_ind)
     print("[INFO] test loss: {:.4f}".format(test_loss))
-    #metrics = {k: tf.keras.metrics.Mean(v) for k, v in test_losses.items()}
-    #metrics['absolute_difference'] = tf.compat.v1.metrics.mean(test_loss)
     return test_loss
 
 
