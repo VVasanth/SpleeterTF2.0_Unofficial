@@ -35,16 +35,24 @@ Input Data Set:
     https://sigsep.github.io/datasets/musdb.html#musdb18-compressed-stems
 3. Once request is placed, dataset access would be provided by the owners in a period of 24 hours.
 4. Dataset would be around 4.4 GB in size and there will be two folders 'train' and 'test' with 100 and 50 files respectively.
-5. You would observe the dataset to be in the format of '.stem.mp4' and each of the files would contain individual stems of the respective musics such as:
+5. You would observe the dataset to be in the format of '.stem.mp4'
+6. We would be required to decode the '.stem.mp4' file into respective stems for us to feed the data for training.
+7. Place the dataset under 'musdb_dataset' folder:
+    ```shell script
+    mkdir musdb_dataset && 
+       cd musdb_dataset && 
+       unzip ~/Downloads/musdb18.zip && 
+       mv musdb18/t* . && cd ..
+    ```       
+8. Execute `. musdecode.sh` shell script and it will decode each of the files, extract the stems and place them under the respective directory.
+9. After it ran folders would contain individual stems of the respective musics such as:
 
     a) bass.wav 
     b) drums.wav
     c) mixture.wav
     d) other.wav
     e) vocals.wav
-6) We would be required to decode the '.stem.mp4' file into respective stems for us to feed the data for training.
-7) Place the dataset under 'musdb_dataset' folder.
-8) Execute the 'musdecode.sh' shell script and it will decode each of the files, extract the stems and place them under the respective directory.
+
 
  **Configurations**
  
