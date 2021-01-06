@@ -16,6 +16,23 @@ migrated referring the source code of official Spleeter.
 
 I would work towards training the solution on the complete dataset of musdb with appropriate infrastructure. Pls expect the functioning version of this solution soon.
 
+*******************************************************************************
+
+Pls note that this project is an e2e solution - where the predicted spectrogram values are further processed to generate the audio files with appropriate masks.
+
+'SpleeterTrainer.py' file is primarily associated with the training of model, whereas 'SpleeterValidator.py' file would perform following activities:
+
+--> read the raw audio file,
+--> process it into spectrogram
+--> feed the spectrogram to the model to generate the predicted (single stem) spectrogram
+--> process the predicted spectrogram to generate the functioning audio file.
+
+As the model is providing lower accuracy now, in order to validate the rest of the processing - I have saved the predictions from Official Spleeter as an 'npy' file and bundled it into this project.
+To validate how the processing works, pls run 'SpleeterValidator.py' file with the flag 'sampleRunToValidateProcessingFlag' as 'True'. When running with this flag, file would replace the predictions value with 
+the prediction value of official spleeter and generate the audio file. You can try this and observe the transformation process.
+
+*******************************************************************************
+
 **Environment Setup:**
 
 Conda Env Setup:
