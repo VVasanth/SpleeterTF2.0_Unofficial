@@ -33,6 +33,18 @@ the prediction value of official spleeter and generate the audio file. You can t
 
 *******************************************************************************
 
+As stated above, objective of this project is to build an Android app with an on-device audio source separation capability. This project is primarily concerned with the model building activity.
+Pls refer the below project for the progress on Android project, that utilizes the model generated from this project.
+
+https://github.com/VVasanth/Spleeter_Unofficial_TF20_MobileApp
+
+*******************************************************************************
+
+Model building activity would require GPU and currently, we are leveraging the GPU from Google Collab. Google Collab files have been built for this purpose and they have been committed under the
+'GoogleCollab' directory.
+
+*******************************************************************************
+
 **Environment Setup:**
 
 Conda Env Setup:
