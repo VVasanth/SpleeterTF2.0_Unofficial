@@ -89,7 +89,7 @@ def dice_coefficient(y_true, y_pred):
 	return numerator / (denominator + tf.keras.backend.epsilon())
 
 
-def trainModelOverEpochs(startEpochVal=0, modelPath=None, learningRate=0):
+def trainModelOverEpochs(noOfEpochs=20, saveModelEvery=5, startEpochVal=0, modelPath=None, learningRate=0):
 
 	INIT_LR = 1e-3
 
@@ -123,7 +123,7 @@ def trainModelOverEpochs(startEpochVal=0, modelPath=None, learningRate=0):
 
 	# construct the set of callbacks
 	callbacks = [
-		EpochCheckpoint(checkPointPath, every=5,
+		EpochCheckpoint(checkPointPath, every=saveModelEvery,
 			startAt=startEpochVal),
 		TrainingMonitor(plotPath,
 			jsonPath=jsonPath,
@@ -137,7 +137,7 @@ def trainModelOverEpochs(startEpochVal=0, modelPath=None, learningRate=0):
 		input_ds,
 		validation_data=test_ds,
 		steps_per_epoch=64,
-		epochs=50,
+		epochs=noOfEpochs,
 		callbacks=callbacks,
 		verbose=1)
 
