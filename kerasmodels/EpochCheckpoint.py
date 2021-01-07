@@ -18,7 +18,7 @@ class EpochCheckpoint(Callback):
         # check to see if the model should be serialized to disk
         if (self.intEpoch + 1) % self.every == 0:
             p = os.path.sep.join([self.outputPath,
-                                  "epoch_{}.hdf5".format(self.intEpoch + 1)])
+                                  "epoch_{}".format(self.intEpoch + 1)])
             self.model.save(p, overwrite=True)
 
         # increment the internal epoch counter
