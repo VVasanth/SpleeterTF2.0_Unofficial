@@ -1,4 +1,4 @@
-from tensorflow.python.training.adam import AdamOptimizer
+from tensorflow.keras.optimizers import Adam
 
 from audio.adapter import get_audio_adapter
 from dataset import DatasetBuilder
@@ -99,7 +99,7 @@ def trainModelOverEpochs(noOfEpochs=20, saveModelEvery=5, startEpochVal=0, model
 	# the network and compile the model
 	if modelPath is None:
 		print("[INFO] compiling model...")
-		opt = AdamOptimizer(learningRate)
+		opt = Adam(learningRate)
 		model = getUnetModel("vocals")
 		model.compile(loss=custom_loss, optimizer=opt,
 			metrics=[dice_coefficient])
