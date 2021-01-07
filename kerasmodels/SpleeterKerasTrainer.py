@@ -1,0 +1,3 @@
+import kerasmodels.SpleeterTrainKerasBase as SpleeterTrainKerasBase
+
+SpleeterTrainKerasBase.trainModelOverEpochs()

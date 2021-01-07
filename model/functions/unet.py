@@ -27,7 +27,7 @@ from tensorflow.keras.layers import (
     ReLU,
     Softmax)
 #from tensorflow.compat.v1 import logging
-#from tensorflow.compat.v1.keras.initializers import he_uniform
+#from tensorflow.compat.v1.kerasmodels.initializers import he_uniform
 # pylint: enable=import-error
 from tensorflow.python.ops.init_ops_v2 import he_uniform
 

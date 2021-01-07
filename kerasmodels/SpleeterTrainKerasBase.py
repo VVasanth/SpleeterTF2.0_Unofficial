@@ -2,8 +2,8 @@ from tensorflow.python.training.adam import AdamOptimizer
 
 from audio.adapter import get_audio_adapter
 from dataset import DatasetBuilder
-from keras.EpochCheckpoint import EpochCheckpoint
-from keras.TrainingMonitor import TrainingMonitor
+from kerasmodels.EpochCheckpoint import EpochCheckpoint
+from kerasmodels.TrainingMonitor import TrainingMonitor
 from model.KerasUnet import getUnetModel
 from utils.configuration import load_configuration
 import tensorflow as tf
@@ -75,7 +75,7 @@ params = load_configuration(config_path)
 audio_adapter = get_audio_adapter(None)
 
 # construct the argument parse and parse the arguments
-checkPointVal = './keras/models'
+checkPointVal = './kerasmodels/models'
 modelVal = None
 startEpochVal = 120
 INIT_LR = 1e-3
@@ -117,8 +117,8 @@ def trainModelOverEpochs():
 
 
 	# build the path to the training plot and training history
-	plotPath = "./keras/plots/resnet_fashion_mnist.png"
-	jsonPath = "./keras/plots/resnet_fashion_mnist.json"
+	plotPath = "./kerasmodels/plots/resnet_fashion_mnist.png"
+	jsonPath = "./kerasmodels/plots/resnet_fashion_mnist.json"
 
 	# construct the set of callbacks
 	callbacks = [
