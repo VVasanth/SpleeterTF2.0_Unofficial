@@ -75,10 +75,7 @@ params = load_configuration(config_path)
 audio_adapter = get_audio_adapter(None)
 
 # construct the argument parse and parse the arguments
-checkPointVal = './kerasmodels/models'
-modelVal = None
-startEpochVal = 120
-INIT_LR = 1e-3
+checkPointPath = './kerasmodels/models'
 
 
 def custom_loss(y_actual, y_predicted):
@@ -92,26 +89,30 @@ def dice_coefficient(y_true, y_pred):
 	return numerator / (denominator + tf.keras.backend.epsilon())
 
 
-def trainModelOverEpochs():
+def trainModelOverEpochs(startEpochVal=0, modelPath=None, learningRate=0):
 
+	INIT_LR = 1e-3
+
+	if(learningRate==0):
+		learningRate = INIT_LR
 	# if there is no specific model checkpoint supplied, then initialize
 	# the network and compile the model
-	if modelVal is None:
+	if modelPath is None:
 		print("[INFO] compiling model...")
-		opt = AdamOptimizer(INIT_LR)
+		opt = AdamOptimizer(learningRate)
 		model = getUnetModel("vocals")
 		model.compile(loss=custom_loss, optimizer=opt,
 			metrics=[dice_coefficient])
 	# otherwise, we're using a checkpoint model
 	else:
 		# load the checkpoint from disk
-		print("[INFO] loading {}...".format(modelVal))
-		model = load_model(modelVal)
+		print("[INFO] loading {}...".format(modelPath))
+		model = load_model(modelPath)
 
 		# update the learning rate
 		print("[INFO] old learning rate: {}".format(
 			K.get_value(model.optimizer.lr)))
-		K.set_value(model.optimizer.lr, 1e-3)
+		K.set_value(model.optimizer.lr, learningRate)
 		print("[INFO] new learning rate: {}".format(
 			K.get_value(model.optimizer.lr)))
 
@@ -122,7 +123,7 @@ def trainModelOverEpochs():
 
 	# construct the set of callbacks
 	callbacks = [
-		EpochCheckpoint(checkPointVal, every=5,
+		EpochCheckpoint(checkPointPath, every=5,
 			startAt=startEpochVal),
 		TrainingMonitor(plotPath,
 			jsonPath=jsonPath,

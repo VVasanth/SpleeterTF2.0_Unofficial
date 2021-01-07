@@ -13,7 +13,9 @@ from os.path import basename, join, splitext, dirname
 from multiprocessing import Pool
 import time
 
-model_dir = './spleeter_saved_model_dir/5000_3112/'  # location of the model
+#model_dir = './spleeter_saved_model_dir/5000_3112/'  # location of the model
+model_dir = './kerasmodels/models/'  # location of the model
+
 input_audio_file = './input/AClassicEducation.wav' # location of the input file
 output_destination = './output/' #location of the output destination
 
@@ -216,7 +218,7 @@ def separate(waveform, audio_descriptor):
         predict_model = tf.saved_model.load(model_dir + instrument)
         inference_func = predict_model.signatures["serving_default"]
         predictions = inference_func(spectrogram)
-        preds[f'{instrument}_spectrogram'] = predictions[f'{instrument}_spectrogram']
+        preds[f'{instrument}_spectrogram'] = predictions[instrument]
         if(sampleRunToValidateProcessingFlag):
             preds[f'{instrument}_spectrogram'] = predValuesFromOfficialSpleeter
 
