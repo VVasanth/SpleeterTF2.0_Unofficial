@@ -1,4 +1,2 @@
 mix_path,vocals_path,drums_path,bass_path,other_path,duration
-train/ANiMAL - Rockshow/mixture.wav,train/ANiMAL - Rockshow/vocals.wav,train/ANiMAL - Rockshow/drums.wav,train/ANiMAL - Rockshow/bass.wav,train/ANiMAL - Rockshow/other.wav,165.511837
-train/Actions - One Minute Smile/mixture.wav,train/Actions - One Minute Smile/vocals.wav,train/Actions - One Minute Smile/drums.wav,train/Actions - One Minute Smile/bass.wav,train/Actions - One Minute Smile/other.wav,163.375601
-train/Alexander Ross - Goodbye Bolero/mixture.wav,train/Alexander Ross - Goodbye Bolero/vocals.wav,train/Alexander Ross - Goodbye Bolero/drums.wav,train/Alexander Ross - Goodbye Bolero/bass.wav,train/Alexander Ross - Goodbye Bolero/other.wav,418.632562
+train/A Classic Education - NightOwl/mixture.wav,train/A Classic Education - NightOwl/vocals.wav,train/A Classic Education - NightOwl/drums.wav,train/A Classic Education - NightOwl/bass.wav,train/A Classic Education - NightOwl/other.wav,171.247166

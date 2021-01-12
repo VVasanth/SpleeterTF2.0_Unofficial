@@ -60,11 +60,11 @@ def get_validation_dataset(audio_params, audio_adapter, audio_path):
         chunk_duration=20.0)
     return builder.build(
         "../config/musdb_validation_small.csv",
-        batch_size=100,
+        batch_size=10,
         cache_directory=audio_params.get('validation_cache'),
         convert_to_uint=True,
         infinite_generator=False,
-        n_chunks_per_song=1,
+        n_chunks_per_song=5,
         # should not perform data augmentation for eval:
         random_data_augmentation=False,
         random_time_crop=False,
