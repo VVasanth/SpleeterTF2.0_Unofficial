@@ -13,7 +13,7 @@ import tensorflow.keras.backend as K
 audio_path = '../musdb_dataset/'
 config_path = "../config/musdb_config.json"
 INIT_LR = 1e-3
-opt = AdamOptimizer(INIT_LR)
+opt = Adam(INIT_LR)
 _instruments = ['vocals']
 model_dict = {}
 model_trainable_variables = {}
@@ -107,8 +107,10 @@ def trainModelOverEpochs(noOfEpochs=20, saveModelEvery=5, startEpochVal=0, model
 	else:
 		# load the checkpoint from disk
 		print("[INFO] loading {}...".format(modelPath))
-		model = load_model(modelPath)
-
+		model = load_model(modelPath, custom_objects={"loss":custom_loss, "metrics":dice_coefficient}, compile=False)
+		opt = Adam(learningRate)
+		model.compile(loss=custom_loss, optimizer=opt,
+					  metrics=[dice_coefficient])
 		# update the learning rate
 		print("[INFO] old learning rate: {}".format(
 			K.get_value(model.optimizer.lr)))
