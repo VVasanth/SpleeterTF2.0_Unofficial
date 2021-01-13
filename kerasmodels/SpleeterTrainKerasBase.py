@@ -1,4 +1,4 @@
-from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.optimizers import Adam, SGD, Adamax
 
 from audio.adapter import get_audio_adapter
 from dataset import DatasetBuilder
@@ -13,7 +13,9 @@ import tensorflow.keras.backend as K
 audio_path = '../musdb_dataset/'
 config_path = "../config/musdb_config.json"
 INIT_LR = 1e-3
-opt = Adam(INIT_LR)
+#opt = Adam(INIT_LR)
+#opt = SGD(lr=INIT_LR, momentum=0.9)
+opt = Adamax(lr=INIT_LR, beta_1=0.9, beta_2=0.999, epsilon=1e-08, clipnorm=10, clipvalue=0)
 _instruments = ['vocals']
 model_dict = {}
 model_trainable_variables = {}
@@ -91,15 +93,13 @@ def dice_coefficient(y_true, y_pred):
 
 def trainModelOverEpochs(noOfEpochs=20, saveModelEvery=5, startEpochVal=0, modelPath=None, learningRate=0):
 
-	INIT_LR = 1e-3
-
+	global opt
 	if(learningRate==0):
 		learningRate = INIT_LR
 	# if there is no specific model checkpoint supplied, then initialize
 	# the network and compile the model
 	if modelPath is None:
 		print("[INFO] compiling model...")
-		opt = Adam(learningRate)
 		model = getUnetModel("vocals")
 		model.compile(loss=custom_loss, optimizer=opt,
 			metrics=[dice_coefficient])
@@ -108,12 +108,12 @@ def trainModelOverEpochs(noOfEpochs=20, saveModelEvery=5, startEpochVal=0, model
 		# load the checkpoint from disk
 		print("[INFO] loading {}...".format(modelPath))
 		model = load_model(modelPath, custom_objects={"loss":custom_loss, "metrics":dice_coefficient}, compile=False)
-		opt = Adam(learningRate)
-		model.compile(loss=custom_loss, optimizer=opt,
-					  metrics=[dice_coefficient])
 		# update the learning rate
 		print("[INFO] old learning rate: {}".format(
 			K.get_value(model.optimizer.lr)))
+		model.compile(loss=custom_loss, optimizer=opt,
+					  metrics=[dice_coefficient])
+
 		K.set_value(model.optimizer.lr, learningRate)
 		print("[INFO] new learning rate: {}".format(
 			K.get_value(model.optimizer.lr)))

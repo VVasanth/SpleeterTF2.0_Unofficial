@@ -1,6 +1,7 @@
 import sys
 import time
 
+from tensorflow.python.keras.optimizers import SGD
 from tensorflow.python.training.adam import AdamOptimizer
 
 from audio.adapter import get_audio_adapter
@@ -15,6 +16,7 @@ audio_path = './musdb_dataset/'
 config_path = "./config/musdb_config.json"
 INIT_LR = 1e-3
 opt = AdamOptimizer(INIT_LR)
+opt = SGD(lr=INIT_LR, momentum=0.9)
 _instruments = ['vocals_spectrogram']
 model_dict = {}
 model_trainable_variables = {}
