@@ -1,4 +1,2 @@
 mix_path,vocals_path,drums_path,bass_path,other_path,duration
 train/A Classic Education - NightOwl/mixture.wav,train/A Classic Education - NightOwl/vocals.wav,train/A Classic Education - NightOwl/drums.wav,train/A Classic Education - NightOwl/bass.wav,train/A Classic Education - NightOwl/other.wav,171.247166
-train/ANiMAL - Clinic A/mixture.wav,train/ANiMAL - Clinic A/vocals.wav,train/ANiMAL - Clinic A/drums.wav,train/ANiMAL - Clinic A/bass.wav,train/ANiMAL - Clinic A/other.wav,237.865215
-train/ANiMAL - Easy Tiger/mixture.wav,train/ANiMAL - Easy Tiger/vocals.wav,train/ANiMAL - Easy Tiger/drums.wav,train/ANiMAL - Easy Tiger/bass.wav,train/ANiMAL - Easy Tiger/other.wav,205.473379
