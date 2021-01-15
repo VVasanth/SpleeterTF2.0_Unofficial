@@ -12,7 +12,7 @@ import tensorflow.keras.backend as K
 
 audio_path = '../musdb_dataset/'
 config_path = "../config/musdb_config.json"
-INIT_LR = 1e-3
+INIT_LR = 1e-4
 #opt = Adam(INIT_LR)
 #opt = SGD(lr=INIT_LR, momentum=0.9)
 #opt = Adamax(lr=INIT_LR, beta_1=0.9, beta_2=0.999, epsilon=1e-08, clipnorm=10, clipvalue=0)
