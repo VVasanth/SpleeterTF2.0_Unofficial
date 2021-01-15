@@ -1,4 +1,4 @@
-from tensorflow.keras.optimizers import Adam, SGD, Adamax
+from tensorflow.keras.optimizers import Adam, SGD, Adamax, RMSprop
 
 from audio.adapter import get_audio_adapter
 from dataset import DatasetBuilder
@@ -15,7 +15,8 @@ config_path = "../config/musdb_config.json"
 INIT_LR = 1e-3
 #opt = Adam(INIT_LR)
 #opt = SGD(lr=INIT_LR, momentum=0.9)
-opt = Adamax(lr=INIT_LR, beta_1=0.9, beta_2=0.999, epsilon=1e-08, clipnorm=10, clipvalue=0)
+#opt = Adamax(lr=INIT_LR, beta_1=0.9, beta_2=0.999, epsilon=1e-08, clipnorm=10, clipvalue=0)
+opt = RMSprop(lr=INIT_LR, rho=0.9, epsilon=1e-06, clipnorm=10, clipvalue=0)
 _instruments = ['vocals']
 model_dict = {}
 model_trainable_variables = {}
