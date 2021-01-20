@@ -241,7 +241,7 @@ def separate(waveform, audio_descriptor):
 waveform, sample_rate = audio_adapter.load(
             input_audio_file,
             offset=0,
-            duration=600,
+            duration=5,
             sample_rate=44100)
 
 sources = separate(waveform, input_audio_file)

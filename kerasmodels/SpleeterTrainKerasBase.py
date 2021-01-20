@@ -109,9 +109,6 @@ def trainModelOverEpochs(noOfEpochs=20, saveModelEvery=5, startEpochVal=0, model
 		# load the checkpoint from disk
 		print("[INFO] loading {}...".format(modelPath))
 		model = load_model(modelPath, custom_objects={"loss":custom_loss, "metrics":dice_coefficient}, compile=False)
-		# update the learning rate
-		print("[INFO] old learning rate: {}".format(
-			K.get_value(model.optimizer.lr)))
 		model.compile(loss=custom_loss, optimizer=opt,
 					  metrics=[dice_coefficient])
 
