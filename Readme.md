@@ -2,6 +2,13 @@ This is an unofficial repository that contains the Spleeter from Deezer(https://
 
 If you would like to participate over Gitter chat - pls use this channel: https://gitter.im/audioSourceSeparationOnEdge/community
 
+******Update 21 Jan*******
+
+I have udpated the code such that training process happens with TF2.0 Keras api. have trained the model over ~500 epochs with limited data.
+Model produces decent results with the train/test data. Pls check and let me know if you face any issues.
+
+***************************
+
 Spleeter is an industry standard audio source separation library that exhibits amazing performance in splitting the audio files into various stems such as vocals, piano, drums, bass
 and accompainments. Spleeter has been created in TF1.0 and the models are available in checkpoint format.
 
