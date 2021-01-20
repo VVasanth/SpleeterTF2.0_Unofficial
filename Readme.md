@@ -11,10 +11,10 @@ This project is my effort in migrating Spleeter into TF2.0 leveraging the latest
 
 Library is currently being built and pls expect considerable changes over time.
 
-Solution has been trained on very limited set of data and does not exhibit proper accuracy in audio separation tasks. But the underlying training and testing code has been faithfully 
-migrated referring the source code of official Spleeter.
+Solution has been trained on very limited set of data and the built model achieves decent accuracy on the audio separation tasks from train/test data. I am working towards
+continuously improving the model accuracy - but the current version is good to showcase the functioning of the model.
 
-I would work towards training the solution on the complete dataset of musdb with appropriate infrastructure. Pls expect the functioning version of this solution soon.
+I would work towards training the solution on the complete dataset of musdb with appropriate infrastructure. Pls expect the very good version of this solution soon.
 
 *******************************************************************************
 
@@ -107,19 +107,18 @@ Let me summarize the process of ModelBuilding and the Unet architecture:
 
 --> Spleeter primarily deals with audio separation process and the Unet architecture that is used here - primarily designed for Image Segmentation problems.  
 --> Here, we will be using the same network and train the network by inputing 'mixture.wav' against each of the stems.  
---> We will identify loss function as a measure of sum of difference between each of the stems actual value and output value.  
---> Optimizer's funciton is to reduce the summation of loss as part of the training process.  
---> As we are required to consier the summation of each of the stem's loss and optimize it - keras based model building would not work here.  
---> We need to write 'custom training logic' using tensorflow's gradient tape's feature.  
---> SpleeterTrain.py contains the corresponding code and trains the network.  
---> Losses of the network are measured every 5 runs and model is saved every 10 runs. These are configurable values and we can change them, as required.  
---> While saving the model - we are saving both checkpoint and savedmodel version.  
---> SavedModel version is to generate the TFLite model, whereas checkpoint is to restart the training post the completion of one run.  
---> Models will be available in 'spleeter_saved_model_dir' at the end of the training.  
+--> Train operation would be performed for each of the stems individually and right now, model has been built with the 'vocals' separation data.
+--> Training the model for rest of the stems would be straightforward - where you would be required to udpate the '_instruments' variable in 'SpleeterTrainer.py' file.
+--> We will identify loss function as a measure of difference between the stems actual value and output value.  
+--> Optimizer's function is to reduce the loss as part of the training process.  
+--> Tensorflow 2 Keras api are used to build the training process.
+--> Training script is written in such a way that it supports 'start/stop/resume' training operation.
+--> During training process, models will be saved every 'n' epoch (as per the defined value in 'SpleeterTrainer.py' file) under 'kerasmodels/models' folder.
+--> Training and validation losses are recorded as a plot under the directory 'kerasmodels/models'.
+--> Models will be saved in 'hdf5' format.
+--> Post training, models in 'hdf5' format could be converted into 'savedmodel' format with the script 'kerasmodels/HDF5ToSavedModelGenerator.py'.
 --> RMSE is being used as a measure of loss  
---> When running the training loop across ~2000 runs on a limited dataset - loss is around 3.0  
---> As part of training operation - 4 model files will be generated, each corresponding to each of the stems.  
---> 4 models will be required to be ported into TFLite version, for android app processing  
+--> SavedModels will be required to be ported into TFLite version, for android app processing (with Spleeter_TFLiteModelGEnerator.py file). 
 
 **Test Operation**
 
