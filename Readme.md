@@ -128,7 +128,7 @@ Audio file needs to be processed for the stft values and to be fed into the mode
 
 Place the input file that needs to be processed in 'input' folder and post execution, output will be generated under the 'output' folder.
 
-Output of model produces the distorted audio, which could be played in any player. 
+Output of model produces decent extraction of vocal audio, which you can play in any player. 
 
 **Accuracy Improvement Process**
 
