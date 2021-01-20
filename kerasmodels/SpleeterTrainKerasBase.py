@@ -11,12 +11,12 @@ from tensorflow.keras.models import load_model
 import tensorflow.keras.backend as K
 
 audio_path = '../musdb_dataset/'
-config_path = "../config/musdb_config.json"
+config_path = "config/musdb_config.json"
 INIT_LR = 1e-4
-#opt = Adam(INIT_LR)
+opt = Adam(INIT_LR)
 #opt = SGD(lr=INIT_LR, momentum=0.9)
 #opt = Adamax(lr=INIT_LR, beta_1=0.9, beta_2=0.999, epsilon=1e-08, clipnorm=10, clipvalue=0)
-opt = RMSprop(lr=INIT_LR, rho=0.9, epsilon=1e-06, clipnorm=10, clipvalue=0)
+#opt = RMSprop(lr=INIT_LR, rho=0.9, epsilon=1e-06, clipnorm=10, clipvalue=0)
 _instruments = ['vocals']
 model_dict = {}
 model_trainable_variables = {}
@@ -39,7 +39,7 @@ def get_training_dataset(audio_params, audio_adapter, audio_path):
         chunk_duration=audio_params.get('chunk_duration', 20.0),
         random_seed=audio_params.get('random_seed', 0))
     return builder.build(
-        "../config/musdb_train_small.csv",
+        audio_params.get('train_csv'),
         cache_directory=audio_params.get('training_cache'),
         batch_size=audio_params.get('batch_size'),
         n_chunks_per_song=audio_params.get('n_chunks_per_song', 1),
@@ -62,7 +62,7 @@ def get_validation_dataset(audio_params, audio_adapter, audio_path):
         audio_path,
         chunk_duration=20.0)
     return builder.build(
-        "../config/musdb_validation_small.csv",
+        audio_params.get('validation_csv'),
         batch_size=10,
         cache_directory=audio_params.get('validation_cache'),
         convert_to_uint=True,

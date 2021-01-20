@@ -1,4 +1,4 @@
-import SpleeterTrainBase
+from old_files import SpleeterTrainBase
 
 noOfTrainingRuns = 101
 saveModelAtEveryRun = 50

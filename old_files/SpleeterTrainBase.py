@@ -12,8 +12,8 @@ from utils.configuration import load_configuration
 import tensorflow as tf
 import csv
 
-audio_path = './musdb_dataset/'
-config_path = "./config/musdb_config.json"
+audio_path = '../musdb_dataset/'
+config_path = "../config/musdb_config.json"
 INIT_LR = 1e-3
 opt = AdamOptimizer(INIT_LR)
 opt = SGD(lr=INIT_LR, momentum=0.9)
@@ -24,7 +24,7 @@ model_trainable_variables = {}
 val_loss_results = []
 val_metrics_results = []
 
-export_dir = './spleeter_saved_model_dir/'
+export_dir = '../spleeter_saved_model_dir/'
 metrics_csv = './csv_metrics/metrics_loss.csv'
 
 def get_training_dataset(audio_params, audio_adapter, audio_path):
